@@ -33,7 +33,7 @@ pub fn mk_validator(config: &ApplicationConfig) -> TokenValidator {
         .as_ref()
         .unwrap_or(&Default::default())
         .iter()
-        .map(|url| url.to_string())
+        .map(|url| url.as_str().trim_end_matches('/').to_string())
         .collect::<Vec<_>>();
     TokenValidator::new()
         .algorithms(AlgorithmPolicy::rsa_all())
