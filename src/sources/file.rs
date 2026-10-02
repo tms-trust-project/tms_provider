@@ -22,27 +22,33 @@ struct ResourcesData {
     resources: HashMap<ResourceId, Resource>,
     generally_available: Vec<ResourceId>,
     per_account: HashMap<AccountId, Vec<ResourceId>>,
+    users: HashMap<ResourceId, HashMap<AccountId, User>>,
 }
 
 #[async_trait]
 impl Source for FileSource {
-    async fn get_resources(
+    async fn get_user_for_resource(
         &self,
-        account: Option<AccountId>,
-    ) -> Result<Resources, SourceError> {
+        account_id: &AccountId,
+        resource_id: &ResourceId,
+    ) -> Result<Option<User>, SourceError> {
+        let users_map = self
+            .data
+            .users
+            .get(resource_id)
+            .ok_or_else(|| ResourceNotFound(resource_id.to_owned()))?;
+        Ok(users_map.get(account_id).cloned())
+    }
+    async fn get_resources(&self, account_id: &AccountId) -> Result<Resources, SourceError> {
         let resources = &self.data.resources;
         let empty = vec![];
-        let per_account = account
-            .map(|act| {
-                self.data.per_account.get(&act).unwrap_or_else(|| {
-                    warn!(
-                        act,
-                        "Account not found, returning only generally available resources"
-                    );
-                    &empty
-                })
-            })
-            .unwrap_or(&empty);
+        let per_account = self.data.per_account.get(account_id).unwrap_or_else(|| {
+            warn!(
+                account_id,
+                "Account not found, returning only generally available resources"
+            );
+            &empty
+        });
         Ok(Resources {
             resources: self
                 .data

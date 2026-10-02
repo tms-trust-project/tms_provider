@@ -21,10 +21,20 @@ pub struct Resource {
     pub description: String,
 }
 
+#[derive(Serialize, Deserialize, Default, Clone, Debug)]
+pub struct User {
+    pub username: String,
+}
+
 #[async_trait]
 pub trait Source {
+    async fn get_user_for_resource(
+        &self,
+        account_id: &AccountId,
+        resource_id: &ResourceId,
+    ) -> Result<Option<User>, SourceError>;
     async fn get_resources(
         &self,
-        account: Option<AccountId>,
+        account_id: &AccountId,
     ) -> Result<Resources, SourceError>;
 }

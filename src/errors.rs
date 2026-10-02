@@ -20,6 +20,9 @@ pub enum ServiceError {
     #[error("Authentication error: {error}")]
     #[http(code = 401, error = error)]
     AuthenticationError { error: String },
+    #[error("Missing subject in JWT")]
+    #[http(code = 400)]
+    MissingSubject
 }
 
 #[derive(Error, Debug)]

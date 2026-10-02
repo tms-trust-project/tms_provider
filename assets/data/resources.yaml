@@ -2,26 +2,47 @@ resources:
   stampede:
     resource_id: stampede
     name: Stampede
-    url: http://example.org/
+    url: http://stampede.foo.bar/
     description: Stampede at TACC
   vista:
     resource_id: vista
     name: Vista
-    url: http://example.org/
+    url: http://vista.foo.bar/
     description: Vista at TACC
   frontera:
     resource_id: frontera
     name: Frontera
-    url: http://example.org/
+    url: http://frontera.foo.bar/
     description: Frontera at TACC
 
 generally_available:
 - stampede
+- vista
+- frontera
 
 per_account:
-  testuser2@dev:
-  - vista
-  - frontera
+  # testuser2@dev:
+  # - vista
+  # - frontera
 
   another-user@dev:
   - frontera
+
+users:
+  stampede:
+    testuser@dev: 
+      username: testuser
+    testuser2@dev: 
+      username: testuser2_stampede
+    
+  vista:
+    testuser@dev: 
+      username: testuser_vista
+    testuser2@dev: 
+      username: testuser2@dev
+
+  frontera:
+    another-user@dev: 
+      username: another@frontera
+    testuser2@dev: 
+      username: testuser2@dev
