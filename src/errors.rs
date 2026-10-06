@@ -22,7 +22,10 @@ pub enum ServiceError {
     AuthenticationError { error: String },
     #[error("Missing subject in JWT")]
     #[http(code = 400)]
-    MissingSubject
+    MissingSubject,
+    #[error("Deserialization error while combining resource and username")]
+    #[http(code = 500)]
+    DeserializationError
 }
 
 #[derive(Error, Debug)]
