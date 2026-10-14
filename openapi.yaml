@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Resources API
+  description: |
+    A Resource Provider runs this service for communicating the resources available
+    and the user accounts on those.
+  version: '0.1.0'
+  contact:
+    name: "TMS Server - CICSupport"
+    url: "https://tapis-project.org"
+    email: "cicsupport@tacc.utexas.edu"
+  license:
+    name: 3-Clause BSD License
+    url: 'https://opensource.org/licenses/BSD-3-Clause'
+
+paths:
+  '/resources':
+    get:
+      description: Resources available in this Resource Provider.
+      operationId: resources
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: Success.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '4XX':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '5XX':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Success:
+      type: object
+      properties: 
+        code:
+          type: integer
+          enum:
+           - 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Resources'
+        message:
+          type: string
+        success:
+          type: boolean
+          enum:
+            - true
+        timestamp:
+          type: string
+
+    Resources:
+      type: array
+      items:
+        $ref: '#/components/schemas/Resource'
+
+    Resource:
+      type: object
+      properties: 
+        description:
+          type: string
+        name:
+          type: string
+        resource_id:
+          type: string
+        url:
+          type: string
+        username:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        success:
+          type: boolean
+          enum:
+            - false
+        timestamp:
+          type: string
+        
